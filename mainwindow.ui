@@ -6,17 +6,111 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>553</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="RegistryWidget" name="registry">
+       <attribute name="title">
+        <string>Реестр</string>
+       </attribute>
+      </widget>
+      <widget class="CatalogWidget" name="catalog">
+       <attribute name="title">
+        <string>Справочник</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>553</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>База данных</string>
+    </property>
+    <addaction name="createAction"/>
+    <addaction name="connectAction"/>
+    <addaction name="disconnectAction"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="addAction"/>
+   <addaction name="removeAction"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="connectAction">
+   <property name="text">
+    <string>Подключить</string>
+   </property>
+  </action>
+  <action name="disconnectAction">
+   <property name="text">
+    <string>Отключить</string>
+   </property>
+  </action>
+  <action name="createAction">
+   <property name="text">
+    <string>Создать</string>
+   </property>
+  </action>
+  <action name="addAction">
+   <property name="text">
+    <string>Добавить</string>
+   </property>
+   <property name="toolTip">
+    <string>Добавить</string>
+   </property>
+  </action>
+  <action name="removeAction">
+   <property name="text">
+    <string>Удалить</string>
+   </property>
+   <property name="toolTip">
+    <string>Удалить</string>
+   </property>
+  </action>
  </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CatalogWidget</class>
+   <extends>QWidget</extends>
+   <header>catalogwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>RegistryWidget</class>
+   <extends>QWidget</extends>
+   <header>registrywidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
