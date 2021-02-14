@@ -11,6 +11,8 @@ public:
     virtual ~IWidget() {};
 
 public slots:
+    virtual void init() = 0;
+    virtual void reset() = 0;
     virtual void addRecord() = 0;
     virtual void removeRecord() = 0;
 

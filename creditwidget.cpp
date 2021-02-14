@@ -14,6 +14,16 @@ CreditWidget::~CreditWidget()
     delete ui;
 }
 
+void CreditWidget::init()
+{
+    qDebug() << "CreditWidget::init()";
+}
+
+void CreditWidget::reset()
+{
+
+}
+
 void CreditWidget::addRecord()
 {
     qDebug() << "CreditWidget::addRecord()";
@@ -21,5 +31,5 @@ void CreditWidget::addRecord()
 
 void CreditWidget::removeRecord()
 {
-    qDebug() << "CreditWidget::removeRecord()";
+    //This operation is not allowed!
 }

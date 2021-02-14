@@ -25,6 +25,9 @@ signals:
 
 private:
     QSqlDatabase _db;
+    const QStringList TABLES{"Sex", "sqlite_sequence", "Person",
+                             "ProductCategory", "Product", "RevenueSource",
+                             "Debit", "Credit"};
 };
 
 #endif // DATABASE_H

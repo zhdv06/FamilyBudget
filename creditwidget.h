@@ -17,8 +17,13 @@ public:
     ~CreditWidget();
 
 public slots:
+    void init() override;
+    void reset() override;
     void addRecord() override;
     void removeRecord() override;
+
+signals:
+    void error(const QString &message);
 
 private:
     Ui::CreditWidget *ui;

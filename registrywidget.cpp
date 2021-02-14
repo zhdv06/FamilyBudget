@@ -6,11 +6,25 @@ RegistryWidget::RegistryWidget(QWidget *parent) :
     ui(new Ui::RegistryWidget)
 {
     ui->setupUi(this);
+    connect(ui->creditTab, &CreditWidget::error,
+            this, &RegistryWidget::error);
 }
 
 RegistryWidget::~RegistryWidget()
 {
     delete ui;
+}
+
+void RegistryWidget::init()
+{
+    for (int i = 0; i < ui->tabWidget->count(); i++)
+        qobject_cast<IWidget*>(ui->tabWidget->widget(i))->init();
+}
+
+void RegistryWidget::reset()
+{
+    for (int i = 0; i < ui->tabWidget->count(); i++)
+        qobject_cast<IWidget*>(ui->tabWidget->widget(i))->reset();
 }
 
 void RegistryWidget::addRecord()
@@ -21,4 +35,9 @@ void RegistryWidget::addRecord()
 void RegistryWidget::removeRecord()
 {
     qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->removeRecord();
+}
+
+void RegistryWidget::updateData()
+{
+
 }

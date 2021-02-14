@@ -17,8 +17,14 @@ public:
     ~RegistryWidget();
 
 public slots:
+    void init() override;
+    void reset() override;
     void addRecord() override;
     void removeRecord() override;
+    void updateData();
+
+signals:
+    void error(const QString &message);
 
 private:
     Ui::RegistryWidget *ui;

@@ -9,6 +9,7 @@ class CatalogWidget;
 }
 
 class QSqlRelationalTableModel;
+class QItemSelectionModel;
 
 class CatalogWidget : public IWidget
 {
@@ -18,8 +19,15 @@ public:
     explicit CatalogWidget(QWidget *parent = nullptr);
     ~CatalogWidget();
     void setTables(const QStringList &tables);
+    void init() override;
+    void reset() override;
     void addRecord() override;
     void removeRecord() override;
+
+signals:
+    void error(const QString &message);
+    void removalAllowed(bool allowed);
+    void updated();
 
 private slots:
     void setTable(const QString &tableName);
@@ -27,6 +35,7 @@ private slots:
 private:
     Ui::CatalogWidget *ui;
     QSqlRelationalTableModel *_model;
+    int _selectedRow;
 };
 
 #endif // CATALOGWIDGET_H

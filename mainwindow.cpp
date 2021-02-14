@@ -11,6 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(ui->registry, &RegistryWidget::error,
+            this, &MainWindow::showError);
+    connect(ui->catalog, &CatalogWidget::error,
+            this, &MainWindow::showError);
+
     ui->disconnectAction->setEnabled(false);
 
     ui->addAction->setEnabled(false);
@@ -34,9 +39,11 @@ MainWindow::MainWindow(QWidget *parent) :
             [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->addRecord();});
     connect(ui->removeAction, &QAction::triggered,
             [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->removeRecord();});
+    connect(ui->catalog, &CatalogWidget::removalAllowed,
+            ui->removeAction, &QAction::setEnabled);
 
-    connect(ui->tabWidget, &QTabWidget::currentChanged,
-            [this](int index){ui->removeAction->setDisabled(index == 0);});
+    connect(ui->catalog, &CatalogWidget::updated,
+            ui->registry, &RegistryWidget::updateData);
 
     connect(_database, &Database::statusUpdated,
             this, &MainWindow::updateDatabaseStatus);
@@ -80,11 +87,15 @@ void MainWindow::updateDatabaseStatus(DatabaseStatus status)
         ui->disconnectAction->setEnabled(true);
 
         ui->addAction->setEnabled(true);
-        ui->removeAction->setEnabled(true);
+//        ui->removeAction->setEnabled(true);
 
         ui->centralWidget->setEnabled(true);
         ui->statusBar->showMessage("Соединение установлено");
-        emit request(RT_Tables);
+
+        for (int i = 0; i < ui->tabWidget->count(); i++)
+            qobject_cast<IWidget*>(ui->tabWidget->widget(i))->init();
+
+        //emit request(RT_Tables);
         break;
 
     case DS_Disconnected:
@@ -92,10 +103,13 @@ void MainWindow::updateDatabaseStatus(DatabaseStatus status)
         ui->disconnectAction->setEnabled(false);
 
         ui->addAction->setEnabled(false);
-        ui->removeAction->setEnabled(false);
+//        ui->removeAction->setEnabled(false);
 
         ui->centralWidget->setEnabled(false);
         ui->statusBar->showMessage("Соединение не установлено");
+
+        for (int i = 0; i < ui->tabWidget->count(); i++)
+            qobject_cast<IWidget*>(ui->tabWidget->widget(i))->reset();
         break;
     }
 }
