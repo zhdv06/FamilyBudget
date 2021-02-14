@@ -8,20 +8,27 @@ CONFIG += c++11
 
 SOURCES += \
     catalogwidget.cpp \
+    creditwidget.cpp \
     database.cpp \
+    debitwidget.cpp \
     main.cpp \
     mainwindow.cpp \
     registrywidget.cpp
 
 HEADERS += \
     catalogwidget.h \
+    creditwidget.h \
     database.h \
+    debitwidget.h \
     defines.h \
+    iwidget.h \
     mainwindow.h \
     registrywidget.h
 
 FORMS += \
     catalogwidget.ui \
+    creditwidget.ui \
+    debitwidget.ui \
     mainwindow.ui \
     registrywidget.ui
 

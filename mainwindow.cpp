@@ -12,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->disconnectAction->setEnabled(false);
+
+    ui->addAction->setEnabled(false);
+    ui->removeAction->setEnabled(false);
+
     ui->centralWidget->setEnabled(false);
     ui->statusBar->showMessage("Соединение не установлено");
 
@@ -25,6 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
             this, &MainWindow::connectToDatabase);
     connect(ui->disconnectAction, &QAction::triggered,
             _database, &Database::disconnect_);
+
+    connect(ui->addAction, &QAction::triggered,
+            [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->addRecord();});
+    connect(ui->removeAction, &QAction::triggered,
+            [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->removeRecord();});
+
+    connect(ui->tabWidget, &QTabWidget::currentChanged,
+            [this](int index){ui->removeAction->setDisabled(index == 0);});
 
     connect(_database, &Database::statusUpdated,
             this, &MainWindow::updateDatabaseStatus);
@@ -66,6 +78,10 @@ void MainWindow::updateDatabaseStatus(DatabaseStatus status)
     case DS_Connected:
         ui->connectAction->setEnabled(false);
         ui->disconnectAction->setEnabled(true);
+
+        ui->addAction->setEnabled(true);
+        ui->removeAction->setEnabled(true);
+
         ui->centralWidget->setEnabled(true);
         ui->statusBar->showMessage("Соединение установлено");
         emit request(RT_Tables);
@@ -74,6 +90,10 @@ void MainWindow::updateDatabaseStatus(DatabaseStatus status)
     case DS_Disconnected:
         ui->connectAction->setEnabled(true);
         ui->disconnectAction->setEnabled(false);
+
+        ui->addAction->setEnabled(false);
+        ui->removeAction->setEnabled(false);
+
         ui->centralWidget->setEnabled(false);
         ui->statusBar->showMessage("Соединение не установлено");
         break;

@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QSqlRelationalTableModel>
 #include <QSqlRelation>
 #include <QSqlRelationalDelegate>
@@ -5,7 +6,7 @@
 #include "ui_catalogwidget.h"
 
 CatalogWidget::CatalogWidget(QWidget *parent) :
-    QWidget(parent),
+    IWidget(parent),
     ui(new Ui::CatalogWidget)
 {
     ui->setupUi(this);
@@ -26,12 +27,12 @@ void CatalogWidget::setTables(const QStringList &tables)
 
 void CatalogWidget::addRecord()
 {
-
+    qDebug() <<"CatalogWidget::addRecord()";
 }
 
 void CatalogWidget::removeRecord()
 {
-
+    qDebug() <<"CatalogWidget::removeRecord()";
 }
 
 void CatalogWidget::setTable(const QString &tableName)
