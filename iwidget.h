@@ -15,6 +15,8 @@ public slots:
     virtual void reset() = 0;
     virtual void addRecord() = 0;
     virtual void removeRecord() = 0;
+    virtual void confirmRecord() = 0;
+    virtual void cancelRecord() = 0;
 
 signals:
 

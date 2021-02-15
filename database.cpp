@@ -35,11 +35,7 @@ void Database::create(const QString &fileName)
         query.exec("CREATE TABLE Product ("
                        "Id   INTEGER PRIMARY KEY AUTOINCREMENT,"
                        "Name VARCHAR(80) NOT NULL,"
-                       "ProductCategoryId INTEGER NOT NULL,"
-                       "FOREIGN KEY (ProductCategoryId)"
-                       "REFERENCES ProductCategory(Id)"
-                       "   ON UPDATE NO ACTION"
-                       "   ON DELETE NO ACTION"
+                       "ProductCategory VARCHAR(80) NOT NULL"
                    ");");
         query.exec("CREATE TABLE RevenueSource ("
                        "Id   INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -47,37 +43,21 @@ void Database::create(const QString &fileName)
                    ");");
         query.exec("CREATE TABLE Debit ("
                        "Id   INTEGER PRIMARY KEY AUTOINCREMENT,"
-                       "PersonId INTEGER NOT NULL,"
+                       "Person VARCHAR(80) NOT NULL,"
                        "Date DATE NOT NULL,"
                        "Value DOUBLE NOT NULL,"
-                       "RevenueSourceId INTEGER NOT NULL,"
-                       "Comment VARCHAR(128),"
-                       "FOREIGN KEY (PersonId) REFERENCES Person(Id)"
-                       "   ON UPDATE NO ACTION"
-                       "   ON DELETE NO ACTION,"
-                       "FOREIGN KEY (RevenueSourceId) REFERENCES RevenueSource(Id)"
-                       "   ON UPDATE NO ACTION"
-                       "   ON DELETE NO ACTION"
+                       "RevenueSource VARCHAR(80) NOT NULL,"
+                       "Comment VARCHAR(128)"
                    ");");
         query.exec("CREATE TABLE Credit ("
                        "Id   INTEGER PRIMARY KEY AUTOINCREMENT,"
-                       "PersonId INTEGER NOT NULL,"
+                       "Person VARCHAR(80) NOT NULL,"
                        "Date DATE NOT NULL,"
                        "Value DOUBLE NOT NULL,"
-                       "ProductId INTEGER NOT NULL,"
-                       "ProductCategoryId INTEGER NOT NULL,"
-                       "Comment VARCHAR(128),"
-                       "FOREIGN KEY (PersonId) REFERENCES Person(Id)"
-                       "   ON UPDATE NO ACTION"
-                       "   ON DELETE NO ACTION,"
-                       "FOREIGN KEY (ProductId) REFERENCES Product(Id)"
-                       "   ON UPDATE NO ACTION"
-                       "   ON DELETE NO ACTION,"
-                       "FOREIGN KEY (ProductCategoryId) REFERENCES ProductCategory(Id)"
-                       "   ON UPDATE NO ACTION"
-                       "   ON DELETE NO ACTION"
+                       "Product VARCHAR(80) NOT NULL,"
+                       "ProductCategory VARCHAR(80) NOT NULL,"
+                       "Comment VARCHAR(128)"
                    ");");
-
 
         emit statusUpdated(DS_Connected);
     }
@@ -85,8 +65,6 @@ void Database::create(const QString &fileName)
     {
         emit error(_db.lastError().text());
     }
-
-
 }
 
 void Database::connect_(const QString &fileName)

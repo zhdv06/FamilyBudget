@@ -21,10 +21,14 @@ public slots:
     void reset() override;
     void addRecord() override;
     void removeRecord() override;
+    void confirmRecord() override;
+    void cancelRecord() override;
     void updateData();
 
 signals:
     void error(const QString &message);
+    void info(const QString &message);
+    void changeStatusUpdated(bool status);
 
 private:
     Ui::RegistryWidget *ui;

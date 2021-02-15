@@ -23,11 +23,14 @@ public:
     void reset() override;
     void addRecord() override;
     void removeRecord() override;
+    void confirmRecord() override;
+    void cancelRecord() override;
 
 signals:
     void error(const QString &message);
+    void info(const QString &message);
     void removalAllowed(bool allowed);
-    void updated();
+    void changeStatusUpdated(bool status);
 
 private slots:
     void setTable(const QString &tableName);

@@ -13,7 +13,8 @@ SOURCES += \
     debitwidget.cpp \
     main.cpp \
     mainwindow.cpp \
-    registrywidget.cpp
+    registrywidget.cpp \
+    reportwidget.cpp
 
 HEADERS += \
     catalogwidget.h \
@@ -23,14 +24,16 @@ HEADERS += \
     defines.h \
     iwidget.h \
     mainwindow.h \
-    registrywidget.h
+    registrywidget.h \
+    reportwidget.h
 
 FORMS += \
     catalogwidget.ui \
     creditwidget.ui \
     debitwidget.ui \
     mainwindow.ui \
-    registrywidget.ui
+    registrywidget.ui \
+    reportwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

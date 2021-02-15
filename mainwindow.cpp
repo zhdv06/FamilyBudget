@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "database.h"
+#include "reportwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,11 +16,17 @@ MainWindow::MainWindow(QWidget *parent) :
             this, &MainWindow::showError);
     connect(ui->catalog, &CatalogWidget::error,
             this, &MainWindow::showError);
+    connect(ui->registry, &RegistryWidget::info,
+            [this](const QString &message){ui->statusBar->showMessage(message, 500);});
+    connect(ui->catalog, &CatalogWidget::info,
+            [this](const QString &message){ui->statusBar->showMessage(message, 500);});
 
     ui->disconnectAction->setEnabled(false);
 
     ui->addAction->setEnabled(false);
     ui->removeAction->setEnabled(false);
+    ui->confirmAction->setEnabled(false);
+    ui->cancelAction->setEnabled(false);
 
     ui->centralWidget->setEnabled(false);
     ui->statusBar->showMessage("Соединение не установлено");
@@ -39,11 +46,17 @@ MainWindow::MainWindow(QWidget *parent) :
             [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->addRecord();});
     connect(ui->removeAction, &QAction::triggered,
             [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->removeRecord();});
+    connect(ui->confirmAction, &QAction::triggered,
+            [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->confirmRecord();});
+    connect(ui->cancelAction, &QAction::triggered,
+            [this](){qobject_cast<IWidget*>(ui->tabWidget->currentWidget())->cancelRecord();});
+
+    connect(ui->reportAction, &QAction::triggered,
+            this, &MainWindow::showReport);
+
+    //may it doesn't needed
     connect(ui->catalog, &CatalogWidget::removalAllowed,
             ui->removeAction, &QAction::setEnabled);
-
-    connect(ui->catalog, &CatalogWidget::updated,
-            ui->registry, &RegistryWidget::updateData);
 
     connect(_database, &Database::statusUpdated,
             this, &MainWindow::updateDatabaseStatus);
@@ -52,7 +65,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_database, &Database::response,
             this, &MainWindow::processResponse);
 
-
+    connect(ui->registry, &RegistryWidget::changeStatusUpdated,
+            ui->confirmAction, &QAction::setEnabled);
+    connect(ui->registry, &RegistryWidget::changeStatusUpdated,
+            ui->cancelAction, &QAction::setEnabled);
+    connect(ui->catalog, &CatalogWidget::changeStatusUpdated,
+            ui->confirmAction, &QAction::setEnabled);
+    connect(ui->catalog, &CatalogWidget::changeStatusUpdated,
+            ui->cancelAction, &QAction::setEnabled);
 }
 
 void MainWindow::showError(const QString &message)
@@ -76,6 +96,16 @@ void MainWindow::connectToDatabase()
                                          QApplication::applicationDirPath(), "*.db");
     if (!fileName.isEmpty())
         QMetaObject::invokeMethod(_database, "connect_", Qt::QueuedConnection, Q_ARG(QString, fileName));
+}
+
+void MainWindow::showReport()
+{
+    ReportWidget *reportWidget = new ReportWidget;
+    connect(reportWidget, &ReportWidget::finished,
+            reportWidget, &ReportWidget::hide);
+    connect(reportWidget, &ReportWidget::finished,
+            reportWidget, &ReportWidget::deleteLater);
+    reportWidget->show();
 }
 
 void MainWindow::updateDatabaseStatus(DatabaseStatus status)

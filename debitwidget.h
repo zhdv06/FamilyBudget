@@ -8,10 +8,6 @@ namespace Ui {
 class DebitWidget;
 }
 
-class QSqlRelationalTableModel;
-class QItemSelectionModel;
-class QDataWidgetMapper;
-
 class DebitWidget : public IWidget
 {
     Q_OBJECT
@@ -25,20 +21,22 @@ public slots:
     void reset() override;
     void addRecord() override;
     void removeRecord() override;
+    void confirmRecord() override;
+    void cancelRecord() override;
 
 signals:
     void error(const QString &message);
+    void info(const QString &message);
+    void changeStatusUpdated(bool status);
 
 private slots:
-    void updateButtons(int row);
+    void selectRecord();
+    int countRecords();
+    void updateButtons();
 
 private:
     Ui::DebitWidget *ui;
-    QSqlRelationalTableModel *_model;
-    QItemSelectionModel *_selectionModel;
-    QDataWidgetMapper *_mapper;
-    int _personIndex;
-    int _revenueSourceIndex;
+    int _index;
 };
 
 #endif // DEBITWIDGET_H

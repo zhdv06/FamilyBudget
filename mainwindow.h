@@ -30,6 +30,7 @@ signals:
 
 private slots:
     void connectToDatabase();
+    void showReport();
 
 private:
     Ui::MainWindow *ui;

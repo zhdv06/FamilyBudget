@@ -21,12 +21,22 @@ public slots:
     void reset() override;
     void addRecord() override;
     void removeRecord() override;
+    void confirmRecord() override;
+    void cancelRecord() override;
 
 signals:
     void error(const QString &message);
+    void info(const QString &message);
+    void changeStatusUpdated(bool status);
+
+private slots:
+    void selectRecord();
+    int countRecords();
+    void updateButtons();
 
 private:
     Ui::CreditWidget *ui;
+    int _index;
 };
 
 #endif // CREDITWIDGET_H
