@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QCloseEvent>
 #include <QMetaObject>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->removeAction->setEnabled(false);
     ui->confirmAction->setEnabled(false);
     ui->cancelAction->setEnabled(false);
+    ui->reportAction->setEnabled(false);
 
     ui->centralWidget->setEnabled(false);
     ui->statusBar->showMessage("Соединение не установлено");
@@ -54,12 +56,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->reportAction, &QAction::triggered,
             this, &MainWindow::showReport);
 
-    //may it doesn't needed
     connect(ui->catalog, &CatalogWidget::removalAllowed,
             ui->removeAction, &QAction::setEnabled);
 
     connect(_database, &Database::statusUpdated,
-            this, &MainWindow::updateDatabaseStatus);
+            this, &MainWindow::updateUi);
     connect(this, &MainWindow::request,
             _database, &Database::processRequest);
     connect(_database, &Database::response,
@@ -101,6 +102,8 @@ void MainWindow::connectToDatabase()
 void MainWindow::showReport()
 {
     ReportWidget *reportWidget = new ReportWidget;
+    connect(reportWidget, &ReportWidget::error,
+            this, &MainWindow::showError);
     connect(reportWidget, &ReportWidget::finished,
             reportWidget, &ReportWidget::hide);
     connect(reportWidget, &ReportWidget::finished,
@@ -108,7 +111,7 @@ void MainWindow::showReport()
     reportWidget->show();
 }
 
-void MainWindow::updateDatabaseStatus(DatabaseStatus status)
+void MainWindow::updateUi(DatabaseStatus status)
 {
     switch (status)
     {
@@ -117,7 +120,7 @@ void MainWindow::updateDatabaseStatus(DatabaseStatus status)
         ui->disconnectAction->setEnabled(true);
 
         ui->addAction->setEnabled(true);
-//        ui->removeAction->setEnabled(true);
+        ui->reportAction->setEnabled(true);
 
         ui->centralWidget->setEnabled(true);
         ui->statusBar->showMessage("Соединение установлено");
@@ -133,7 +136,9 @@ void MainWindow::updateDatabaseStatus(DatabaseStatus status)
         ui->disconnectAction->setEnabled(false);
 
         ui->addAction->setEnabled(false);
-//        ui->removeAction->setEnabled(false);
+        ui->confirmAction->setEnabled(false);
+        ui->cancelAction->setEnabled(false);
+        ui->reportAction->setEnabled(false);
 
         ui->centralWidget->setEnabled(false);
         ui->statusBar->showMessage("Соединение не установлено");
@@ -164,4 +169,10 @@ void MainWindow::processResponse(RequestType rt, QVariant data)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    _database->disconnect_();
+    event->accept();
 }

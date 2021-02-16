@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 #include "database.h"
@@ -69,7 +68,7 @@ void Database::create(const QString &fileName)
 
 void Database::connect_(const QString &fileName)
 {
-    _db = QSqlDatabase::addDatabase("QSQLITE"/*, "FamilyBudget"*/);
+    _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(fileName);
     if (_db.open())
     {
@@ -87,8 +86,6 @@ void Database::connect_(const QString &fileName)
 void Database::disconnect_()
 {
     _db.close();
-//    _db = QSqlDatabase();
-//    QSqlDatabase::removeDatabase("FamilyBudget");
     emit statusUpdated(DS_Disconnected);
 }
 
@@ -98,6 +95,9 @@ void Database::processRequest(RequestType rt)
     {
     case RT_Tables:
         emit response(rt, QVariant(_db.tables()));
+        break;
+
+    default:
         break;
     }
 }

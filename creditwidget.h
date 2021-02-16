@@ -29,12 +29,11 @@ signals:
     void info(const QString &message);
     void changeStatusUpdated(bool status);
 
-private slots:
+private:
     void selectRecord();
     int countRecords();
     void updateButtons();
 
-private:
     Ui::CreditWidget *ui;
     int _index;
 };

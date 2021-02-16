@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -38,7 +37,6 @@ DebitWidget::~DebitWidget()
 
 void DebitWidget::selectRecord()
 {
-    qDebug() << "DebitWidget::selectRecord()";
     QSqlQuery query;
     query.prepare("SELECT Person, Date, Value, RevenueSource, Comment FROM Debit WHERE Id = :index;");
     query.bindValue(":index", _index);
@@ -65,7 +63,6 @@ int DebitWidget::countRecords()
 
 void DebitWidget::init()
 {
-    qDebug() << "DebitWidget::init()";
     selectRecord();
 }
 
@@ -76,18 +73,15 @@ void DebitWidget::reset()
 
 void DebitWidget::addRecord()
 {
-    qDebug() << "DebitWidget::addRecord()";
-
     QSqlQuery query;
     query.prepare("INSERT INTO Debit (Person, Date, Value, RevenueSource) "
-                  "VALUES ((SELECT Id FROM Person ORDER BY Id DESC LIMIT 1), "
+                  "VALUES ((SELECT FullName FROM Person ORDER BY Id DESC LIMIT 1), "
                            ":date, "
                            "1000.00, "
                            "(SELECT Name FROM RevenueSource ORDER BY Id DESC LIMIT 1));"
     );
     query.bindValue(":date", QDate::currentDate().toString("yyyy-MM-dd"));
     query.exec();
-    qDebug() << query.lastQuery();
     if (query.lastError().type() == QSqlError::NoError)
     {
         emit info("Запись успешно добавлена.");
@@ -128,7 +122,6 @@ void DebitWidget::confirmRecord()
         if (!result)
         {
             emit error(QString("Значение \"%1\" отсутствует в справочнике.").arg(fullName));
-            //удалить добавленную строку!!!
             return;
         }
     }
@@ -152,7 +145,6 @@ void DebitWidget::confirmRecord()
         if (!result)
         {
             emit error(QString("Значение \"%1\" отсутствует в справочнике.").arg(name));
-            //удалить добавленную строку
             return;
         }
     }
@@ -162,14 +154,15 @@ void DebitWidget::confirmRecord()
         return;
     }
 
-    query.prepare("UPDATE Debit"
-                  "SET Person = ':person' Date = ':date' Value = ':value' RevenueSource = ':revenueSource' Comment = ':comment'"
+    query.prepare("UPDATE Debit "
+                  "SET Person=:person, Date=:date, Value=:value, RevenueSource=:revenueSource, Comment=:comment "
                   "WHERE Id = :index;");
     query.bindValue(":person", ui->fullNameEdit->text());
     query.bindValue(":date", ui->dateEdit->date().toString("yyyy-MM-dd"));
     query.bindValue(":value", ui->valueSpinBox->value());
     query.bindValue(":revenueSource", ui->revenueSourceEdit->text());
     query.bindValue(":comment", ui->commentEdit->text());
+    query.bindValue(":index", _index);
     query.exec();
     if (query.lastError().type() == QSqlError::NoError)
         emit changeStatusUpdated(false);

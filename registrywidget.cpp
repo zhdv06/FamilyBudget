@@ -16,6 +16,8 @@ RegistryWidget::RegistryWidget(QWidget *parent) :
             this, &RegistryWidget::info);
     connect(ui->debitTab, &DebitWidget::changeStatusUpdated,
             this, &RegistryWidget::changeStatusUpdated);
+    connect(ui->creditTab, &CreditWidget::changeStatusUpdated,
+            this, &RegistryWidget::changeStatusUpdated);
 }
 
 RegistryWidget::~RegistryWidget()

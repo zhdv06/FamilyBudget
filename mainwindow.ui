@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Семейный бюджет</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -51,7 +51,24 @@
     <addaction name="connectAction"/>
     <addaction name="disconnectAction"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Редактировать</string>
+    </property>
+    <addaction name="addAction"/>
+    <addaction name="removeAction"/>
+    <addaction name="confirmAction"/>
+    <addaction name="cancelAction"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>Отчет</string>
+    </property>
+    <addaction name="reportAction"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -60,29 +77,50 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="createAction"/>
+   <addaction name="connectAction"/>
+   <addaction name="disconnectAction"/>
+   <addaction name="separator"/>
    <addaction name="addAction"/>
    <addaction name="removeAction"/>
    <addaction name="confirmAction"/>
    <addaction name="cancelAction"/>
+   <addaction name="separator"/>
    <addaction name="reportAction"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="connectAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/connect_db.png</normaloff>:/icons/connect_db.png</iconset>
+   </property>
    <property name="text">
     <string>Подключить</string>
    </property>
   </action>
   <action name="disconnectAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/disconnect_db.png</normaloff>:/icons/disconnect_db.png</iconset>
+   </property>
    <property name="text">
     <string>Отключить</string>
    </property>
   </action>
   <action name="createAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/add_db.png</normaloff>:/icons/add_db.png</iconset>
+   </property>
    <property name="text">
     <string>Создать</string>
    </property>
   </action>
   <action name="addAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
+   </property>
    <property name="text">
     <string>Добавить</string>
    </property>
@@ -91,6 +129,10 @@
    </property>
   </action>
   <action name="removeAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/remove.png</normaloff>:/icons/remove.png</iconset>
+   </property>
    <property name="text">
     <string>Удалить</string>
    </property>
@@ -99,6 +141,10 @@
    </property>
   </action>
   <action name="confirmAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/confirm.png</normaloff>:/icons/confirm.png</iconset>
+   </property>
    <property name="text">
     <string>Подтвердить</string>
    </property>
@@ -107,6 +153,10 @@
    </property>
   </action>
   <action name="cancelAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/cancel.png</normaloff>:/icons/cancel.png</iconset>
+   </property>
    <property name="text">
     <string>Отменить</string>
    </property>
@@ -115,6 +165,10 @@
    </property>
   </action>
   <action name="reportAction">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/report.png</normaloff>:/icons/report.png</iconset>
+   </property>
    <property name="text">
     <string>Отчет</string>
    </property>
@@ -138,6 +192,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

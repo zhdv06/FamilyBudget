@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QSqlError>
 #include <QSqlQuery>
 #include "creditwidget.h"
@@ -36,7 +35,6 @@ CreditWidget::~CreditWidget()
 
 void CreditWidget::selectRecord()
 {
-    qDebug() << "CreditWidget::selectRecord()";
     QSqlQuery query;
     query.prepare("SELECT Person, Date, Value, Product, ProductCategory, Comment FROM Credit WHERE Id = :index;");
     query.bindValue(":index", _index);
@@ -64,7 +62,6 @@ int CreditWidget::countRecords()
 
 void CreditWidget::init()
 {
-    qDebug() << "CreditWidget::init()";
     selectRecord();
 }
 
@@ -75,11 +72,9 @@ void CreditWidget::reset()
 
 void CreditWidget::addRecord()
 {
-    qDebug() << "CreditWidget::addRecord()";
-
     QSqlQuery query;
     query.prepare("INSERT INTO Credit (Person, Date, Value, Product, ProductCategory) "
-                  "VALUES ((SELECT Id FROM Person ORDER BY Id DESC LIMIT 1), "
+                  "VALUES ((SELECT FullName FROM Person ORDER BY Id DESC LIMIT 1), "
                            ":date, "
                            "1000.00, "
                            "(SELECT Name FROM Product ORDER BY Id DESC LIMIT 1), "
@@ -87,7 +82,6 @@ void CreditWidget::addRecord()
     );
     query.bindValue(":date", QDate::currentDate().toString("yyyy-MM-dd"));
     query.exec();
-    qDebug() << query.lastQuery();
     if (query.lastError().type() == QSqlError::NoError)
     {
         emit info("Запись успешно добавлена.");
@@ -193,8 +187,7 @@ void CreditWidget::confirmRecord()
     query.bindValue(":productCategory", ui->productCategoryEdit->text());
     query.bindValue(":comment", ui->commentEdit->text());
     query.bindValue(":index", _index);
-    qDebug() << query.exec();
-    qDebug() << query.lastQuery();
+    query.exec();
     if (query.lastError().type() == QSqlError::NoError)
         emit changeStatusUpdated(false);
     else

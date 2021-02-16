@@ -1,5 +1,6 @@
+#include <QDesktopServices>
+#include <QUrl>
 #include <QFile>
-#include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 #include "reportwidget.h"
@@ -29,7 +30,7 @@ void ReportWidget::showReport()
     personQuery.exec("SELECT DISTINCT Person FROM Credit;");
     if (personQuery.lastError().type() == QSqlError::NoError)
     {
-        header.append("Person");
+        header.append("ФИО");
         QSqlQuery productCategoryQuery;
         while (personQuery.next())
         {
@@ -58,8 +59,8 @@ void ReportWidget::showReport()
                     if (productCategoryQuery.lastError().type() == QSqlError::NoError && sumQuery.next())
                         record.append(sumQuery.value(0).toString());
                 }
-                if (!header.contains("Sum"))
-                    header.append("Sum");
+                if (!header.contains("Сумма"))
+                    header.append("Сумма");
 
                 double sum = 0;
                 for (int i = 1; i < record.size(); i++)
@@ -70,7 +71,7 @@ void ReportWidget::showReport()
         }
 
         QStringList record;
-        record.append("Total");
+        record.append("Итого");
         for (int i = 1; i < header.size(); i++)
         {
             double sum = 0;
@@ -82,43 +83,59 @@ void ReportWidget::showReport()
         results.prepend(header);
     }
 
-    for (const QStringList& list: results)
-        qDebug() << list;
-
     writeFile(results);
-
-
-
     emit finished();
 }
 
 void ReportWidget::writeFile(const QList<QStringList>& results)
 {
-    QString text =
-        "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">"
-        "<html>"
-        "<head>"
-        "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
-        "<title>Отчет</title>"
-        "</head>"
-        "<body>"
-        "<table>";
-
-    for (const QStringList& row: results)
+    QString inFileName(QString("%1/template.html").arg(QApplication::applicationDirPath()));
+    QString outFileName(QString("%1/report.html").arg(QApplication::applicationDirPath()));
+    QFile fin(inFileName);
+    QFile fout(outFileName);
+    if (!fin.open(QIODevice::ReadOnly) || !fout.open(QIODevice::WriteOnly))
     {
-        text += "<tr>";
-        for (const QString& value: row)
-        {
-            text += "<td>";
-            text += value;
-            text += "</td>";
-        }
-        text += "</tr>";
+        emit error("Не удалось записать отчет.");
+        return;
     }
-    text += "</table></body></html>";
 
-    QFile file("c:/Users/Denis/QtProjects/TestTaskQt/db/1.html");
-    file.open(QIODevice::WriteOnly);
-    file.write(text.toUtf8());
-    file.close();
+    QString beginDateMark("<!--begin_date-->");
+    QString endDateMark("<!--end_date-->");
+    QString tableMark("<!--table_mark-->");
+
+    while (!fin.atEnd())
+    {
+        QString line = fin.readLine();
+        if (line.contains(beginDateMark) && line.contains(endDateMark))
+        {
+            line.replace(beginDateMark, ui->beginDateEdit->date().toString("dd.MM.yyyy"));
+            line.replace(endDateMark, ui->endDateEdit->date().toString("dd.MM.yyyy"));
+            fout.write(line.toUtf8());
+        }
+        else if (line.contains(tableMark))
+        {
+            QString text("<table border=1>");
+            for (const QStringList& row: results)
+            {
+                text += "<tr>";
+                for (const QString& value: row)
+                {
+                    text += "<td>";
+                    text += value;
+                    text += "</td>";
+                }
+                text += "</tr>";
+            }
+            text += "</table>";
+            line.replace(tableMark, text);
+            fout.write(line.toUtf8());
+        }
+        else
+            fout.write(line.toUtf8());
+    }
+
+    QDesktopServices::openUrl(QUrl(QString("file:///%1").arg(outFileName), QUrl::TolerantMode));
+
+    fin.close();
+    fout.close();
 }

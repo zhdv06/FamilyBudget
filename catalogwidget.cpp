@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlRelationalTableModel>
@@ -51,16 +50,13 @@ void CatalogWidget::reset()
 
 void CatalogWidget::addRecord()
 {
-    qDebug() <<"CatalogWidget::addRecord()";
     _model->insertRow(0);
 }
 
 void CatalogWidget::removeRecord()
 {
-    qDebug() <<"CatalogWidget::removeRecord()";    
     _model->removeRow(_selectedRow);
     emit changeStatusUpdated(true);
-//    _model->select();
 }
 
 void CatalogWidget::confirmRecord()
@@ -111,7 +107,6 @@ void CatalogWidget::setTable(const QString &tableName)
     connect(ui->tableView->selectionModel(), &QItemSelectionModel::selectionChanged,
             [this](const QItemSelection &selected, const QItemSelection &/*deselected*/) {
                 bool isSelected(selected.indexes().count() > 0);
-//                qDebug() << isSelected;
                 _selectedRow = isSelected ? selected.indexes().at(0).row(): -1;
                 emit removalAllowed(isSelected);
         });

@@ -16,6 +16,7 @@ public:
     ~ReportWidget();
 
 signals:
+    void error(const QString &message);
     void finished();
 
 private slots:

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/cancel.png</file>
+        <file>icons/confirm.png</file>
+        <file>icons/add.png</file>
+        <file>icons/remove.png</file>
+        <file>icons/report.png</file>
+        <file>icons/add_db.png</file>
+        <file>icons/connect_db.png</file>
+        <file>icons/disconnect_db.png</file>
+    </qresource>
+</RCC>
